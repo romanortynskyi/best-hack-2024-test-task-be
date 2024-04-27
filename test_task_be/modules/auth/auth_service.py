@@ -68,6 +68,7 @@ class AuthService:
       'firstName': user.first_name,
       'lastName': user.last_name,
       'email': user.email,
+      'isProvider': user.is_provider,
       'createdAt': user.created_at.__str__(),
       'updatedAt': user.updated_at.__str__(),
     }
@@ -97,6 +98,7 @@ class AuthService:
         'firstName': user.first_name,
         'lastName': user.last_name,
         'email': user.email,
+        'isProvider': user.is_provider,
         'createdAt': user.created_at.__str__(),
         'updatedAt': user.updated_at.__str__(),
       }
