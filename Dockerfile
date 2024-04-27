@@ -18,6 +18,9 @@ RUN poetry install --only main
 # Copy your app code
 COPY . .
 
+RUN echo "JWT_SECRET_KEY=$JWT_SECRET_KEY" > .env
+RUN echo "SQLALCHEMY_DATABASE_URI=$SQLALCHEMY_DATABASE_URI" >> .env
+
 # Expose port (adjust if your app listens on a different port)
 EXPOSE 5000
 
