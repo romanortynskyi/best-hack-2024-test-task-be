@@ -1,5 +1,6 @@
+import os
+
 class Config:
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:1234@localhost:5432/best-hack-2024-test-task"
     LOGGING = {
         "version": 1,
         "filters": {

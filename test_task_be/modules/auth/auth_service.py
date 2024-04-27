@@ -1,18 +1,23 @@
 import os
 import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
 
 from exceptions.email_already_exists_exception import EmailAlreadyExistsException
 from modules.auth.dto.sign_up_request_dto import SignUpRequestDto
 from models.user_model import UserModel
-from db import DB
 from exceptions.wrong_credentials_exception import WrongCredentialsException
 from modules.auth.dto.login_request_dto import LoginRequestDto
 from exceptions.invalid_token_exception import InvalidTokenException
 
 class AuthService:
+  db: SQLAlchemy
+
+  def __init__(self, db):
+    self.db = db
+
   def signup(self, dto: SignUpRequestDto):
-    session = DB.get_instance().session
+    session = self.db.session
 
     user_by_email = session.query(UserModel).filter(UserModel.email == dto.email).first()
 
@@ -51,7 +56,7 @@ class AuthService:
     }
 
   def login(self, dto: LoginRequestDto):
-    session = DB.get_instance().session
+    session = self.db.session
 
     user = session.query(UserModel).filter(UserModel.email == dto.email).first()
 
@@ -81,7 +86,7 @@ class AuthService:
     }
 
   def get_user_by_token(self, bearer_token: str):
-    session = DB.get_instance().session
+    session = self.db.session
 
     _, token = bearer_token.split(' ')
 

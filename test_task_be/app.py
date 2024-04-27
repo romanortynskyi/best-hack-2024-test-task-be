@@ -1,13 +1,14 @@
 import json
+import os
 from dotenv import load_dotenv
 import logging
 from logging.config import dictConfig
-from flask import Flask, url_for
+from flask import Flask
 from werkzeug.exceptions import HTTPException
+from flask_sqlalchemy import SQLAlchemy
 
 from config import Config
 from modules.auth.auth_controller import auth_bp
-from db import DB
 
 dictConfig(Config.LOGGING)
 LOGGER = logging.getLogger(__name__)
@@ -17,6 +18,10 @@ def create_app():
   app = Flask(__name__)
 
   app.config.from_object(Config)
+  app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+
+  db = SQLAlchemy(app)
+  app.config['db'] = db
 
   app.register_blueprint(auth_bp, url_prefix='/auth')
 
@@ -28,7 +33,6 @@ def create_app():
 load_dotenv()
 
 app = create_app()
-db = DB.get_instance(app)
 
 @app.errorhandler(HTTPException)
 def handle_exception(e):
@@ -43,7 +47,4 @@ def handle_exception(e):
     return response
 
 if __name__ == '__main__':
-    db.init_app(app)
-    db.create_all()
-    
-    app.run()
+    app.run(host = '0.0.0.0', port = 5000)

@@ -1,5 +1,4 @@
-from flask import Blueprint, jsonify, request
-from marshmallow import ValidationError
+from flask import Blueprint, request, current_app
 
 from decorators import timed
 from modules.auth.auth_service import AuthService
@@ -9,11 +8,11 @@ from request_handler import RequestHandler
 
 auth_bp = Blueprint('auth', __name__)
 
-auth_service = AuthService()
-
 @timed
 @auth_bp.post('/signup')
 def signup():
+  auth_service = AuthService(current_app.config['db'])
+
   return RequestHandler.handle_request(
     request = request,
     schema_class = SignUpRequestSchema,
@@ -24,6 +23,8 @@ def signup():
 @timed
 @auth_bp.post('/login')
 def login():
+  auth_service = AuthService(current_app.config['db'])
+
   return RequestHandler.handle_request(
     request = request,
     schema_class = LoginRequestSchema,
@@ -34,6 +35,8 @@ def login():
 @timed
 @auth_bp.get('/me')
 def get_me():
+  auth_service = AuthService(current_app.config['db'])
+
   return RequestHandler.handle_request(
     request = request,
     callback = lambda: auth_service.get_user_by_token(request.headers.get('Authorization')),
