@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from modules.advertisement.dto.add_advertisement_request_dto import AddAdvertisementRequestDto
 from models.advertisement_model import AdvertisementModel
 from models.user_model import UserModel
+from exceptions.advertisement_not_found_exception import AdvertisementNotFoundException
 
 class AdvertisementService:
   db: SQLAlchemy
@@ -24,11 +25,11 @@ class AdvertisementService:
         'lastName': advertisement.user.last_name,
         'email': advertisement.user.email,
         'isProvider': advertisement.user.is_provider,
-        'createdAt': advertisement.user.created_at,
-        'updatedAt': advertisement.user.updated_at,
+        'createdAt': advertisement.user.created_at.__str__(),
+        'updatedAt': advertisement.user.updated_at.__str__(),
       },
-      'createdAt': advertisement.created_at,
-      'updatedAt': advertisement.updated_at,
+      'createdAt': advertisement.created_at.__str__(),
+      'updatedAt': advertisement.updated_at.__str__(),
     }
 
   def add_advertisement(self, dto: AddAdvertisementRequestDto, user_id: int):
@@ -47,28 +48,11 @@ class AdvertisementService:
 
     session.refresh(advertisement)
 
-    return {
-      'id': advertisement.id,
-      'firstName': advertisement.first_name,
-      'lastName': advertisement.last_name,
-      'phoneNumber': advertisement.phone_number,
-      'city': advertisement.city,
-      'description': advertisement.description,
-      'user': {
-        'id': advertisement.user.id,
-        'firstName': advertisement.user.first_name,
-        'lastName': advertisement.user.last_name,
-        'email': advertisement.user.email,
-        'isProvider': advertisement.user.is_provider,
-        'createdAt': advertisement.user.created_at,
-        'updatedAt': advertisement.user.updated_at,
-      },
-      'createdAt': advertisement.created_at.__str__(),
-      'updatedAt': advertisement.updated_at.__str__(),
-    }
+    return self._parse_advertisement(advertisement)
 
   def get_advertisements(self, user):
     session = self.db.session
+
     advertisements = session.query(
       AdvertisementModel,
     ).join(
@@ -80,3 +64,17 @@ class AdvertisementService:
     ).all()
 
     return list(map(self._parse_advertisement, advertisements))
+
+  def get_advertisement_by_id(self, id: int):
+    session = self.db.session
+
+    advertisement = session.query(
+      AdvertisementModel,
+    ).filter(
+      AdvertisementModel.id == id,
+    ).first()
+
+    if advertisement is None:
+      raise AdvertisementNotFoundException()
+    
+    return self._parse_advertisement(advertisement)

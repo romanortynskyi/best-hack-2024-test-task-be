@@ -29,5 +29,16 @@ def get_advertisements(user):
   return RequestHandler.handle_request(
     request = request,
     callback = lambda: advertisement_service.get_advertisements(user),
-    success_status = 201,
+    success_status = 200,
+  )
+
+@timed
+@advertisement_bp.get('/<id>')
+def get_advertisement_by_id(id: int):
+  advertisement_service = AdvertisementService(current_app.config['db'])
+
+  return RequestHandler.handle_request(
+    request = request,
+    callback = lambda: advertisement_service.get_advertisement_by_id(id),
+    success_status = 200,
   )
