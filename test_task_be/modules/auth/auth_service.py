@@ -9,6 +9,8 @@ from models.user_model import UserModel
 from exceptions.wrong_credentials_exception import WrongCredentialsException
 from modules.auth.dto.login_request_dto import LoginRequestDto
 from exceptions.invalid_token_exception import InvalidTokenException
+from modules.auth.dto.update_user_request_dto import UpdateUserRequestDto
+from exceptions.user_not_found_exception import UserNotFoundException
 
 class AuthService:
   db: SQLAlchemy
@@ -113,3 +115,29 @@ class AuthService:
     
     except jwt.exceptions.DecodeError:
       raise InvalidTokenException()
+
+  def update_user(self, id: int, dto: UpdateUserRequestDto):
+    session = self.db.session
+
+    user = session.query(UserModel).filter(UserModel.id == id).first()
+
+    if user is None:
+      raise UserNotFoundException()
+
+    user.email = dto.email
+    user.first_name = dto.first_name
+    user.last_name = dto.last_name
+    user.is_provider = dto.is_provider
+
+    session.commit()
+    session.refresh(user)
+
+    return {
+      'id': id,
+      'firstName': user.first_name,
+      'lastName': user.last_name,
+      'email': user.email,
+      'isProvider': user.is_provider,
+      'createdAt': user.created_at.__str__(),
+      'updatedAt': user.updated_at.__str__(),
+    }
