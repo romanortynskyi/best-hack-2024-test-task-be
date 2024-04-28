@@ -56,3 +56,15 @@ def update_advertisement(user, id: int):
     callback = lambda dto: advertisement_service.update_advertisement(id, dto, user['id']),
     success_status = 200,
   )
+
+@timed
+@advertisement_bp.delete('/<id>')
+@authenticated(current_app)
+def delete_advertisement(user, id: int):
+  advertisement_service = AdvertisementService(current_app.config['db'])
+
+  return RequestHandler.handle_request(
+    request = request,
+    callback = lambda: advertisement_service.delete_advertisement(id, user['id']),
+    success_status = 204,
+  )

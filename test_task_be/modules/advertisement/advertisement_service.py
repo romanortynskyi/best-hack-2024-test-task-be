@@ -109,3 +109,24 @@ class AdvertisementService:
     session.refresh(advertisement)
 
     return self._parse_advertisement(advertisement)
+
+  def delete_advertisement(self, id, user_id: int):
+    session = self.db.session
+
+    advertisement = session.query(
+      AdvertisementModel,
+    ).join(
+      UserModel,
+      UserModel.id == AdvertisementModel.user_id,
+    ).filter(
+      AdvertisementModel.id == id,
+    ).first()
+
+    if advertisement.user_id != user_id:
+      raise ForbiddenException()
+
+    if advertisement is None:
+      raise AdvertisementNotFoundException()
+    
+    session.delete(advertisement)
+    session.commit()
