@@ -9,6 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from config import Config
 from modules.auth.auth_controller import auth_bp
+from modules.advertisement.advertisement_controller import advertisement_bp
 
 dictConfig(Config.LOGGING)
 LOGGER = logging.getLogger(__name__)
@@ -24,6 +25,7 @@ def create_app():
   app.config['db'] = db
 
   app.register_blueprint(auth_bp, url_prefix='/auth')
+  app.register_blueprint(advertisement_bp, url_prefix='/advertisements')
 
   LOGGER.info(f'App started')
 

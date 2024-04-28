@@ -3,23 +3,37 @@ import logging
 import threading
 import time
 from typing import Dict
+from flask import jsonify, request
+
+from modules.auth.auth_service import AuthService
+from exceptions.invalid_token_exception import InvalidTokenException
 
 LOGGER = logging.getLogger(__name__)
 
+def authenticated(app):
+    def decorator(f):
+        @functools.wraps(f)
+        def decorated(*args, **kwargs):
+            auth_service = AuthService(app.config['db'])
+						
+            user = auth_service.get_user_by_token(request.headers.get('Authorization'))
+
+            return f(*args, user = user, **kwargs)
+              
+        return decorated
+    return decorator
+
 def timed(func):
-    """
-    Decorator to print the time elapsed by the decorated method
-    """
+  @functools.wraps(func)
+  def wrapper(*args, **kwargs):
+    start = time.time()
 
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        start = time.time()
-        try:
-            return func(*args, **kwargs)
-        finally:
-            LOGGER.debug(f"Method {build_key(func)} took {time.time() - start}")
+    try:
+      return func(*args, **kwargs)
+    finally:
+      LOGGER.debug(f"Method {build_key(func)} took {time.time() - start}")
 
-    return wrapper
+  return wrapper
 
 
 TIMES_PER_FUNC: Dict[str, Dict[str, int]] = dict()

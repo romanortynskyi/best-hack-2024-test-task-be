@@ -86,6 +86,9 @@ class AuthService:
     }
 
   def get_user_by_token(self, bearer_token: str):
+    if bearer_token is None:
+      raise InvalidTokenException()
+
     session = self.db.session
 
     _, token = bearer_token.split(' ')

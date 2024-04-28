@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from sqlalchemy import Column, DateTime, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped
 from sqlalchemy.sql import func
