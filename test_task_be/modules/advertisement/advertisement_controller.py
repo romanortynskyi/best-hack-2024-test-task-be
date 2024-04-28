@@ -19,3 +19,15 @@ def add_advertisement(user):
     callback = lambda dto: advertisement_service.add_advertisement(dto, user['id']),
     success_status = 201,
   )
+
+@timed
+@advertisement_bp.get('/')
+@authenticated(current_app)
+def get_advertisements(user):
+  advertisement_service = AdvertisementService(current_app.config['db'])
+
+  return RequestHandler.handle_request(
+    request = request,
+    callback = lambda: advertisement_service.get_advertisements(user),
+    success_status = 201,
+  )
