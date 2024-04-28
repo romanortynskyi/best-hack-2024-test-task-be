@@ -4,6 +4,7 @@ from decorators import authenticated, timed
 from modules.advertisement.advertisement_service import AdvertisementService
 from request_handler import RequestHandler
 from modules.advertisement.schemas.add_advertisement_request_schema import AddAdvertisementRequestSchema
+from modules.advertisement.schemas.update_advertisement_request_schema import UpdateAdvertisementRequestSchema
 
 advertisement_bp = Blueprint('adrvertisements', __name__)
 
@@ -40,5 +41,18 @@ def get_advertisement_by_id(id: int):
   return RequestHandler.handle_request(
     request = request,
     callback = lambda: advertisement_service.get_advertisement_by_id(id),
+    success_status = 200,
+  )
+
+@timed
+@advertisement_bp.put('/<id>')
+@authenticated(current_app)
+def update_advertisement(user, id: int):
+  advertisement_service = AdvertisementService(current_app.config['db'])
+
+  return RequestHandler.handle_request(
+    request = request,
+    schema_class = UpdateAdvertisementRequestSchema,
+    callback = lambda dto: advertisement_service.update_advertisement(id, dto, user['id']),
     success_status = 200,
   )

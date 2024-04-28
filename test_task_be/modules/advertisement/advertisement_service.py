@@ -4,6 +4,8 @@ from modules.advertisement.dto.add_advertisement_request_dto import AddAdvertise
 from models.advertisement_model import AdvertisementModel
 from models.user_model import UserModel
 from exceptions.advertisement_not_found_exception import AdvertisementNotFoundException
+from modules.advertisement.dto.update_advertisement_request_dto import UpdateAdvertisementRequestDto
+from exceptions.forbidden_exception import ForbiddenException
 
 class AdvertisementService:
   db: SQLAlchemy
@@ -77,4 +79,33 @@ class AdvertisementService:
     if advertisement is None:
       raise AdvertisementNotFoundException()
     
+    return self._parse_advertisement(advertisement)
+  
+  def update_advertisement(self, id, dto: UpdateAdvertisementRequestDto, user_id: int):
+    session = self.db.session
+
+    advertisement = session.query(
+      AdvertisementModel,
+    ).join(
+      UserModel,
+      UserModel.id == AdvertisementModel.user_id,
+    ).filter(
+      AdvertisementModel.id == id,
+    ).first()
+
+    if advertisement.user_id != user_id:
+      raise ForbiddenException()
+
+    if advertisement is None:
+      raise AdvertisementNotFoundException()
+    
+    advertisement.first_name = dto.first_name
+    advertisement.last_name = dto.last_name
+    advertisement.phone_number = dto.phone_number
+    advertisement.city = dto.city
+    advertisement.description = dto.description
+
+    session.commit()
+    session.refresh(advertisement)
+
     return self._parse_advertisement(advertisement)
