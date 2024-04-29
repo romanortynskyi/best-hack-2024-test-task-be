@@ -1,5 +1,7 @@
 FROM python:3.12.3-bookworm
 
+ARG SQLALCHEMY_DATABASE_URI
+
 # Create a working directory for your app
 WORKDIR /app
 
@@ -20,6 +22,8 @@ COPY . .
 
 # Expose port (adjust if your app listens on a different port)
 EXPOSE 5000
+
+ENV SQLALCHEMY_DATABASE_URI=$SQLALCHEMY_DATABASE_URI
 
 RUN cd spotify_clone_be && poetry run alembic upgrade head
 
