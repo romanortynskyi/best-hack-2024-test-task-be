@@ -1,4 +1,4 @@
-SECRET_NAME="SQLALCHEMY_DATABASE_URI"
+SECRET_NAME="best-hack-2024-test-task-be/sqlalchemy-database-uri"
 
 # Retrieve the secret value
 SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id $SECRET_NAME --query SecretString --output text)
