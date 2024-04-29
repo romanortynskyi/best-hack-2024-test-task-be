@@ -1,4 +1,4 @@
-FROM python:3.12.3-bookworm as builder
+FROM python:3.12.3-bookworm
 
 # Create a working directory for your app
 WORKDIR /app
@@ -20,8 +20,6 @@ COPY . .
 
 # Expose port (adjust if your app listens on a different port)
 EXPOSE 5000
-
-COPY --from=builder /build/environment .env
 
 RUN cd test_task_be && poetry run alembic upgrade head
 
