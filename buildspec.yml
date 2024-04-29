@@ -1,10 +1,12 @@
 version: 0.2
 
+env:
+  secrets_manager:
+    SQLALCHEMY_DATABASE_URI: arn:aws:secretsmanager:us-east-1:891377136147:secret:best-hack-2024-test-task-be/sqlalchemy-database-uri-mdOYL2
+
 phases:
   pre_build:
     commands:
-      - ./pre-build.sh
-      
       - echo Logging in to Amazon ECR...
       - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --output text --query 'Account')
 
