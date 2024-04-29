@@ -12,6 +12,7 @@ phases:
     commands:
       - AWS_CONNECTION_STRING_SECRET_ARN=arn:aws:secretsmanager:us-east-1:891377136147:secret:best-hack-2024-test-task-be/sqlalchemy-database-uri-mdOYL2
       - SQLALCHEMY_DATABASE_URI_JSON=$(aws secretsmanager get-secret-value --secret-id $AWS_CONNECTION_STRING_SECRET_ARN --query SecretString)
+      - echo $SQLALCHEMY_DATABASE_URI_JSON
       - SQLALCHEMY_DATABASE_URI=$SQLALCHEMY_DATABASE_URI_JSON | jq -r '.SQLALCHEMY_DATABASE_URI'
 
       - echo Build started on `date`
