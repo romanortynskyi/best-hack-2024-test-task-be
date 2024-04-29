@@ -1,7 +1,7 @@
 version: 0.2
 
 env:
-  secrets_manager:
+  secrets-manager:
     SQLALCHEMY_DATABASE_URI: arn:aws:secretsmanager:us-east-1:891377136147:secret:best-hack-2024-test-task-be/sqlalchemy-database-uri-mdOYL2
 
 phases:
