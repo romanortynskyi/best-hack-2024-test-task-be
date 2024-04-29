@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "test-task-be"
+name = "spotify_clone_be"
 version = "0.1.0"
 description = ""
 authors = ["Roman Ortynskyi <50491616+lazyDefender@users.noreply.github.com>"]

@@ -1,6 +1,5 @@
-from typing import List
-from sqlalchemy import Column, DateTime, Integer, String, Text, func, Boolean
-from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy import Column, DateTime, Integer, String, Text, func
+from sqlalchemy.orm import Mapped
 
 from models.base_model import BaseModel
 
@@ -23,5 +22,3 @@ class UserModel(BaseModel):
     nullable = False,
   )
   password = Column(Text, nullable = False)
-  is_provider = Column(Boolean, nullable = False)
-  advertisements: Mapped[List['AdvertisementModel']] = relationship(back_populates = 'user')

@@ -33,7 +33,6 @@ class AuthService:
       last_name = dto.last_name,
       email = dto.email,
       password = password,
-      is_provider = dto.is_provider,
     )
     session.add(user)
     session.commit()
@@ -45,7 +44,6 @@ class AuthService:
       'firstName': user.first_name,
       'lastName': user.last_name,
       'email': user.email,
-      'isProvider': user.is_provider,
       'createdAt': user.created_at.__str__(),
       'updatedAt': user.updated_at.__str__(),
     }
@@ -75,7 +73,6 @@ class AuthService:
       'firstName': user.first_name,
       'lastName': user.last_name,
       'email': user.email,
-      'isProvider': user.is_provider,
       'createdAt': user.created_at.__str__(),
       'updatedAt': user.updated_at.__str__(),
     }
@@ -108,7 +105,6 @@ class AuthService:
         'firstName': user.first_name,
         'lastName': user.last_name,
         'email': user.email,
-        'isProvider': user.is_provider,
         'createdAt': user.created_at.__str__(),
         'updatedAt': user.updated_at.__str__(),
       }
@@ -127,7 +123,6 @@ class AuthService:
     user.email = dto.email
     user.first_name = dto.first_name
     user.last_name = dto.last_name
-    user.is_provider = dto.is_provider
 
     session.commit()
     session.refresh(user)
@@ -137,7 +132,6 @@ class AuthService:
       'firstName': user.first_name,
       'lastName': user.last_name,
       'email': user.email,
-      'isProvider': user.is_provider,
       'createdAt': user.created_at.__str__(),
       'updatedAt': user.updated_at.__str__(),
     }
