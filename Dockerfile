@@ -21,8 +21,6 @@ COPY . .
 # Expose port (adjust if your app listens on a different port)
 EXPOSE 5000
 
-ENV SQLALCHEMY_DATABASE_URI=arn:aws:secretsmanager:us-east-1:891377136147:secret:best-hack-2024-test-task-be/sqlalchemy-database-uri-mdOYL2
-
 RUN cd test_task_be && poetry run alembic upgrade head
 
 # Set the command to run your app (replace "app:app" with your entry point)
