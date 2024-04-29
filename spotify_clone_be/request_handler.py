@@ -1,4 +1,5 @@
 from http.client import HTTPException
+from pprint import pprint
 from flask import Request, jsonify
 from marshmallow import ValidationError
 
@@ -13,12 +14,23 @@ class RequestHandler:
     schema_class = None,
   ):
     try:
+      print(request.content_type)
+      print(request.form)
+      result = None
+
       if schema_class is None:
         result = callback()
 
       else:
-        dto = schema_class().load(request.get_json())
-        result = callback(dto)
+        if request.content_type == 'application/json':
+          dto = schema_class().load(request.get_json())
+          result = callback(dto)
+        
+        else:
+          pprint(request.form)
+          dto = schema_class().load(request.form)
+          pprint(dto)
+          result = callback(dto)
 
       return jsonify(result), success_status
 
