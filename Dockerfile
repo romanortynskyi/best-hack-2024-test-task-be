@@ -21,7 +21,7 @@ COPY . .
 # Expose port (adjust if your app listens on a different port)
 EXPOSE 5000
 
-COPY --from=builder /build/environment .env
+COPY --from=build /build/environment .env
 
 RUN cd test_task_be && poetry run alembic upgrade head
 
