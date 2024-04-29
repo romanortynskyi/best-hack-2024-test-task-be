@@ -21,7 +21,7 @@ COPY . .
 # Expose port (adjust if your app listens on a different port)
 EXPOSE 5000
 
-RUN cd test_task_be && poetry run alembic upgrade head
+RUN cd spotify_clone_be && poetry run alembic upgrade head
 
 # Set the command to run your app (replace "app:app" with your entry point)
 CMD ["poetry", "run", "python", "test_task_be/app.py"]
